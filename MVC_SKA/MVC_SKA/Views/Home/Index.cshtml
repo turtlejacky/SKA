@@ -1,0 +1,77 @@
+﻿@model MVC_SKA.ViewModels.Form
+
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<br>
+
+<table id="myFrom">
+    <tr>
+        <td id="0">@Model.Grids[0].Value</td>
+        <td id="1">@Model.Grids[1].Value</td>
+        <td id="2">@Model.Grids[2].Value</td>
+    </tr>
+    <tr>
+
+        <td id="3">@Model.Grids[3].Value</td>
+        <td id="4">@Model.Grids[4].Value</td>
+        <td id="5">@Model.Grids[5].Value</td>
+    </tr>
+    <tr>
+
+        <td id="6">@Model.Grids[6].Value</td>
+        <td id="7">@Model.Grids[7].Value</td>
+        <td id="8">@Model.Grids[8].Value</td>
+    </tr>
+</table>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $("#myFrom td").on("click",
+                function () {
+                    var click = $(this).attr("id");
+                    if ($(this).text() != ' ') {
+                        return;
+                    }
+                    $(this).text("O");
+                    $.ajax({
+                        url: "/Home/ChoseGrid",
+                        data: { indexOfGrid: click },
+                        method: "post",
+                        datatype: 'json',
+                        success: function (data) {
+                            var respond = JSON.parse(data);
+                            if (respond.IsFinish === false) {
+                                $("#" + respond.CrossStep).text('X');
+                            } else {
+                                if (respond.GameRusult === "CrossWin") {
+                                    $("#" + respond.CrossStep).text('X');
+                                }
+                                window.setTimeout(function () {
+                                    alert(respond.GameRusult);
+                                }, 300);
+
+                            }
+                        }
+                    });
+                });
+        });
+    </script>
+}
+
+<style>
+    table {
+        border-collapse: collapse;
+    }
+
+    td {
+        border: 5px solid #000;
+        width: 100px;
+        height: 100px;
+        line-height: 100px;
+        text-align: center;
+        font-size: 50pt;
+    }
+</style>
